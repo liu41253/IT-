@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>测试页面</title>
+</head>
+<body>
+    <h1>测试页面 - 刘志华20234059</h1>
+    <p th:if="${error}" th:text="${error}" style="color: red;">错误信息</p>
+    <p>JobPositions数量: <span th:text="${#lists.size(jobPositions)}">0</span></p>
+    
+    <div th:each="jobPosition : ${jobPositions}">
+        <p th:text="${jobPosition.companyName}">公司名称</p>
+    </div>
+</body>
+</html>

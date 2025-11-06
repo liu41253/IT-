@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT岗位求职记录系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .salary-range {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-badge {
+            font-size: 0.8rem;
+        }
+        .priority-high {
+            color: #dc3545;
+        }
+        .priority-medium {
+            color: #ffc107;
+        }
+        .priority-low {
+            color: #28a745;
+        }
+        .search-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-briefcase-fill"></i> IT岗位求职记录系统 - 刘志华20234059
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add">添加岗位</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- 搜索区域 -->
+        <div class="search-section">
+            <h4 class="mb-3"><i class="bi bi-search"></i> 岗位搜索</h4>
+            <form action="/search" method="get" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="companyName" placeholder="企业名称" th:value="${companyName}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="positionName" placeholder="岗位名称" th:value="${positionName}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="location" placeholder="工作地点" th:value="${location}">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="status">
+                        <option value="">所有状态</option>
+                        <option value="进行中" th:selected="${status == '进行中'}">进行中</option>
+                        <option value="已投递" th:selected="${status == '已投递'}">已投递</option>
+                        <option value="面试中" th:selected="${status == '面试中'}">面试中</option>
+                        <option value="已拒绝" th:selected="${status == '已拒绝'}">已拒绝</option>
+                        <option value="已接受" th:selected="${status == '已接受'}">已接受</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">搜索</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 岗位列表 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4><i class="bi bi-list-ul"></i> 岗位列表</h4>
+                    <a href="/add" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> 添加岗位
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" th:if="${#lists.isEmpty(jobPositions)}">
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> 暂无岗位信息，<a href="/add">点击添加</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" th:if="${!#lists.isEmpty(jobPositions)}">
+            <div class="col-lg-4 col-md-6 mb-4" th:each="jobPosition : ${jobPositions}">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0" th:text="${jobPosition.companyName}">企业名称</h5>
+                        <span class="badge bg-primary status-badge" th:text="${jobPosition.status}">状态</span>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted" th:text="${jobPosition.positionName}">岗位名称</h6>
+                        <p class="card-text">
+                            <i class="bi bi-geo-alt"></i> <span th:text="${jobPosition.location}">工作地点</span><br>
+                            <i class="bi bi-briefcase"></i> <span th:text="${jobPosition.experienceRequired}">经验要求</span><br>
+                            <i class="bi bi-mortarboard"></i> <span th:text="${jobPosition.educationRequired}">学历要求</span>
+                        </p>
+                        <p class="salary-range">
+                            <i class="bi bi-currency-yen"></i> 
+                            <span th:text="${jobPosition.salaryMin + '-' + jobPosition.salaryMax + ' ' + jobPosition.salaryUnit}">薪资范围</span>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                优先级: 
+                                <span th:if="${jobPosition.priority == '高'}" class="priority-high">
+                                    <i class="bi bi-arrow-up-circle-fill"></i> 高
+                                </span>
+                                <span th:if="${jobPosition.priority == '中'}" class="priority-medium">
+                                    <i class="bi bi-dash-circle-fill"></i> 中
+                                </span>
+                                <span th:if="${jobPosition.priority == '低'}" class="priority-low">
+                                    <i class="bi bi-arrow-down-circle-fill"></i> 低
+                                </span>
+                            </small>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                发布日期: <span th:text="${#temporals.format(jobPosition.publishDate, 'yyyy-MM-dd')}">2023-11-01</span>
+                            </small>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100" role="group">
+                            <a th:href="@{/view/{id}(id=${jobPosition.id})}" class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-eye"></i> 查看
+                            </a>
+                            <a th:href="@{/edit/{id}(id=${jobPosition.id})}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil"></i> 编辑
+                            </a>
+                            <a th:href="@{/delete/{id}(id=${jobPosition.id})}" 
+                               class="btn btn-outline-danger btn-sm"
+                               onclick="return confirm('确定要删除这个岗位吗？')">
+                                <i class="bi bi-trash"></i> 删除
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-light text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2023 IT岗位求职记录系统 - 专为IT求职者设计</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

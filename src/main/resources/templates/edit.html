@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑岗位 - IT岗位求职记录系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            color: #495057;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-briefcase-fill"></i> IT岗位求职记录系统 - 刘志华20234059
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add">添加岗位</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="form-container">
+                    <h3 class="mb-4 text-center">
+                        <i class="bi bi-pencil-square"></i> 编辑岗位信息
+                    </h3>
+                    
+                    <form th:action="@{/edit/{id}(id=*{id})}" method="post" th:object="${jobPosition}">
+                        <!-- 隐藏ID字段 -->
+                        <input type="hidden" th:field="*{id}">
+                        
+                        <!-- 基本信息 -->
+                        <div class="form-section">
+                            <h5 class="section-title"><i class="bi bi-info-circle"></i> 基本信息</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="companyName" class="form-label">企业名称 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="companyName" th:field="*{companyName}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="positionName" class="form-label">岗位名称 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="positionName" th:field="*{positionName}" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="salaryMin" class="form-label">最低薪资</label>
+                                    <input type="number" class="form-control" id="salaryMin" th:field="*{salaryMin}" step="0.01">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="salaryMax" class="form-label">最高薪资</label>
+                                    <input type="number" class="form-control" id="salaryMax" th:field="*{salaryMax}" step="0.01">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="salaryUnit" class="form-label">薪资单位</label>
+                                    <select class="form-select" id="salaryUnit" th:field="*{salaryUnit}">
+                                        <option value="K/月">K/月</option>
+                                        <option value="万/年">万/年</option>
+                                        <option value="元/天">元/天</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="location" class="form-label">工作地点</label>
+                                    <input type="text" class="form-control" id="location" th:field="*{location}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="experienceRequired" class="form-label">经验要求</label>
+                                    <input type="text" class="form-control" id="experienceRequired" th:field="*{experienceRequired}" placeholder="如：1-3年">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="educationRequired" class="form-label">学历要求</label>
+                                    <select class="form-select" id="educationRequired" th:field="*{educationRequired}">
+                                        <option value="">不限</option>
+                                        <option value="大专">大专</option>
+                                        <option value="本科">本科</option>
+                                        <option value="硕士">硕士</option>
+                                        <option value="博士">博士</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 岗位描述 -->
+                        <div class="form-section">
+                            <h5 class="section-title"><i class="bi bi-file-text"></i> 岗位描述</h5>
+                            <div class="mb-3">
+                                <label for="jobDescription" class="form-label">岗位描述</label>
+                                <textarea class="form-control" id="jobDescription" th:field="*{jobDescription}" rows="4"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="jobRequirements" class="form-label">岗位要求</label>
+                                <textarea class="form-control" id="jobRequirements" th:field="*{jobRequirements}" rows="4"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="companyDescription" class="form-label">企业描述</label>
+                                <textarea class="form-control" id="companyDescription" th:field="*{companyDescription}" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- 联系信息 -->
+                        <div class="form-section">
+                            <h5 class="section-title"><i class="bi bi-telephone"></i> 联系信息</h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="contactPerson" class="form-label">联系人</label>
+                                    <input type="text" class="form-control" id="contactPerson" th:field="*{contactPerson}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="contactPhone" class="form-label">联系电话</label>
+                                    <input type="text" class="form-control" id="contactPhone" th:field="*{contactPhone}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="contactEmail" class="form-label">联系邮箱</label>
+                                    <input type="email" class="form-control" id="contactEmail" th:field="*{contactEmail}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 其他信息 -->
+                        <div class="form-section">
+                            <h5 class="section-title"><i class="bi bi-gear"></i> 其他信息</h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="publishDate" class="form-label">发布日期</label>
+                                    <input type="date" class="form-control" id="publishDate" th:field="*{publishDate}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="applicationDeadline" class="form-label">申请截止日期</label>
+                                    <input type="date" class="form-control" id="applicationDeadline" th:field="*{applicationDeadline}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="status" class="form-label">申请状态</label>
+                                    <select class="form-select" id="status" th:field="*{status}">
+                                        <option value="进行中">进行中</option>
+                                        <option value="已投递">已投递</option>
+                                        <option value="面试中">面试中</option>
+                                        <option value="已拒绝">已拒绝</option>
+                                        <option value="已接受">已接受</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="priority" class="form-label">优先级</label>
+                                    <select class="form-select" id="priority" th:field="*{priority}">
+                                        <option value="高">高</option>
+                                        <option value="中">中</option>
+                                        <option value="低">低</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">备注</label>
+                                <textarea class="form-control" id="notes" th:field="*{notes}" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-arrow-left"></i> 返回
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> 更新岗位
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-light text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2023 IT岗位求职记录系统 - 专为IT求职者设计</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

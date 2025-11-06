@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzh.it.mapper.JobPositionMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="JobPositionResultMap" type="com.lzh.it.entity.JobPosition">
+        <id property="id" column="id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="positionName" column="position_name"/>
+        <result property="salaryMin" column="salary_min"/>
+        <result property="salaryMax" column="salary_max"/>
+        <result property="salaryUnit" column="salary_unit"/>
+        <result property="location" column="location"/>
+        <result property="experienceRequired" column="experience_required"/>
+        <result property="educationRequired" column="education_required"/>
+        <result property="jobDescription" column="job_description"/>
+        <result property="jobRequirements" column="job_requirements"/>
+        <result property="companyDescription" column="company_description"/>
+        <result property="publishDate" column="publish_date"/>
+        <result property="applicationDeadline" column="application_deadline"/>
+        <result property="contactPerson" column="contact_person"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="contactEmail" column="contact_email"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="notes" column="notes"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    
+    <!-- 查询所有岗位 -->
+    <select id="findAll" resultMap="JobPositionResultMap">
+        SELECT * FROM job_position ORDER BY create_time DESC
+    </select>
+    
+    <!-- 根据ID查询岗位 -->
+    <select id="findById" resultMap="JobPositionResultMap">
+        SELECT * FROM job_position WHERE id = #{id}
+    </select>
+    
+    <!-- 添加岗位 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO job_position (
+            company_name, position_name, salary_min, salary_max, salary_unit, location,
+            experience_required, education_required, job_description, job_requirements,
+            company_description, publish_date, application_deadline, contact_person,
+            contact_phone, contact_email, status, priority, notes
+        ) VALUES (
+            #{companyName}, #{positionName}, #{salaryMin}, #{salaryMax}, #{salaryUnit}, #{location},
+            #{experienceRequired}, #{educationRequired}, #{jobDescription}, #{jobRequirements},
+            #{companyDescription}, #{publishDate}, #{applicationDeadline}, #{contactPerson},
+            #{contactPhone}, #{contactEmail}, #{status}, #{priority}, #{notes}
+        )
+    </insert>
+    
+    <!-- 更新岗位 -->
+    <update id="update">
+        UPDATE job_position SET
+            company_name = #{companyName},
+            position_name = #{positionName},
+            salary_min = #{salaryMin},
+            salary_max = #{salaryMax},
+            salary_unit = #{salaryUnit},
+            location = #{location},
+            experience_required = #{experienceRequired},
+            education_required = #{educationRequired},
+            job_description = #{jobDescription},
+            job_requirements = #{jobRequirements},
+            company_description = #{companyDescription},
+            publish_date = #{publishDate},
+            application_deadline = #{applicationDeadline},
+            contact_person = #{contactPerson},
+            contact_phone = #{contactPhone},
+            contact_email = #{contactEmail},
+            status = #{status},
+            priority = #{priority},
+            notes = #{notes},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 删除岗位 -->
+    <delete id="deleteById">
+        DELETE FROM job_position WHERE id = #{id}
+    </delete>
+    
+    <!-- 根据条件查询岗位 -->
+    <select id="findByCondition" resultMap="JobPositionResultMap">
+        SELECT * FROM job_position
+        <where>
+            <if test="companyName != null and companyName != ''">
+                AND company_name LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="positionName != null and positionName != ''">
+                AND position_name LIKE CONCAT('%', #{positionName}, '%')
+            </if>
+            <if test="location != null and location != ''">
+                AND location LIKE CONCAT('%', #{location}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    
+</mapper>

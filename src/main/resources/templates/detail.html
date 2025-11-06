@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>岗位详情 - IT岗位求职记录系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .detail-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .detail-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            color: #495057;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .salary-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0d6efd;
+        }
+        .status-badge {
+            font-size: 0.9rem;
+        }
+        .action-buttons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-briefcase-fill"></i> IT岗位求职记录系统 - 刘志华20234059
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add">添加岗位</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="detail-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">
+                            <i class="bi bi-info-circle"></i> 岗位详情
+                        </h3>
+                        <span class="badge status-badge" 
+                              th:classappend="${jobPosition.status == '进行中' ? 'bg-primary' : 
+                                             jobPosition.status == '已投递' ? 'bg-info' : 
+                                             jobPosition.status == '面试中' ? 'bg-warning' : 
+                                             jobPosition.status == '已拒绝' ? 'bg-danger' : 'bg-success'}"
+                              th:text="${jobPosition.status}">进行中</span>
+                    </div>
+                    
+                    <!-- 基本信息 -->
+                    <div class="detail-section">
+                        <h5 class="section-title"><i class="bi bi-info-circle"></i> 基本信息</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <p class="mb-2"><span class="detail-label">企业名称：</span> <span th:text="${jobPosition.companyName}">阿里巴巴</span></p>
+                                <p class="mb-2"><span class="detail-label">岗位名称：</span> <span th:text="${jobPosition.positionName}">Java开发工程师</span></p>
+                                <p class="mb-2"><span class="detail-label">工作地点：</span> <span th:text="${jobPosition.location}">杭州</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2"><span class="detail-label">经验要求：</span> <span th:text="${jobPosition.experienceRequired}">3-5年</span></p>
+                                <p class="mb-2"><span class="detail-label">学历要求：</span> <span th:text="${jobPosition.educationRequired}">本科及以上</span></p>
+                                <p class="mb-2"><span class="detail-label">优先级：</span> 
+                                    <span class="badge" 
+                                          th:classappend="${jobPosition.priority == '高' ? 'bg-danger' : 
+                                                         jobPosition.priority == '中' ? 'bg-warning' : 'bg-secondary'}"
+                                          th:text="${jobPosition.priority}">高</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="mb-0"><span class="detail-label">薪资范围：</span> 
+                                    <span class="salary-display">
+                                        <span th:text="${jobPosition.salaryMin}">20</span>K - 
+                                        <span th:text="${jobPosition.salaryMax}">35</span>K 
+                                        <span th:text="${jobPosition.salaryUnit}">/月</span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 岗位描述 -->
+                    <div class="detail-section">
+                        <h5 class="section-title"><i class="bi bi-file-text"></i> 岗位描述</h5>
+                        <div class="mb-3">
+                            <p class="detail-label">岗位描述：</p>
+                            <div th:if="${jobPosition.jobDescription}" th:text="${jobPosition.jobDescription}">负责核心业务系统的设计与开发...</div>
+                            <div th:unless="${jobPosition.jobDescription}" class="text-muted">暂无描述</div>
+                        </div>
+                        <div class="mb-3">
+                            <p class="detail-label">岗位要求：</p>
+                            <div th:if="${jobPosition.jobRequirements}" th:text="${jobPosition.jobRequirements}">1. 3年以上Java开发经验...</div>
+                            <div th:unless="${jobPosition.jobRequirements}" class="text-muted">暂无要求</div>
+                        </div>
+                        <div>
+                            <p class="detail-label">企业描述：</p>
+                            <div th:if="${jobPosition.companyDescription}" th:text="${jobPosition.companyDescription}">阿里巴巴集团是全球领先的科技企业...</div>
+                            <div th:unless="${jobPosition.companyDescription}" class="text-muted">暂无描述</div>
+                        </div>
+                    </div>
+
+                    <!-- 联系信息 -->
+                    <div class="detail-section">
+                        <h5 class="section-title"><i class="bi bi-telephone"></i> 联系信息</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="mb-2"><span class="detail-label">联系人：</span> <span th:text="${jobPosition.contactPerson}">张经理</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-2"><span class="detail-label">联系电话：</span> <span th:text="${jobPosition.contactPhone}">13800138000</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-2"><span class="detail-label">联系邮箱：</span> <span th:text="${jobPosition.contactEmail}">hr@example.com</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 其他信息 -->
+                    <div class="detail-section">
+                        <h5 class="section-title"><i class="bi bi-gear"></i> 其他信息</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><span class="detail-label">发布日期：</span> <span th:text="${jobPosition.publishDate}">2023-05-01</span></p>
+                                <p class="mb-2"><span class="detail-label">申请截止日期：</span> <span th:text="${jobPosition.applicationDeadline}">2023-06-30</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p class="detail-label">备注：</p>
+                            <div th:if="${jobPosition.notes}" th:text="${jobPosition.notes}">已投递简历，等待面试通知</div>
+                            <div th:unless="${jobPosition.notes}" class="text-muted">暂无备注</div>
+                        </div>
+                    </div>
+
+                    <!-- 操作按钮 -->
+                    <div class="action-buttons">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-arrow-left"></i> 返回列表
+                            </a>
+                            <a th:href="@{/edit/{id}(id=${jobPosition.id})}" class="btn btn-warning me-md-2">
+                                <i class="bi bi-pencil-square"></i> 编辑
+                            </a>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash"></i> 删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认模态框 -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">确认删除</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    确定要删除这个岗位信息吗？此操作不可恢复。
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <a th:href="@{/delete/{id}(id=${jobPosition.id})}" class="btn btn-danger">确认删除</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-light text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2023 IT岗位求职记录系统 - 专为IT求职者设计</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
